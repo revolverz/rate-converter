@@ -3,7 +3,8 @@
       <section class="rates-list-content">
         <h2 class="title">Курс валют к рублю</h2>
         <list-exchange-rates
-          @open-converter="goToConverter($event)"  />
+          @open-converter="goToConverter($event)"
+        />
       </section>
       <rate-converter
         v-if="isConverterOpened"
@@ -11,7 +12,6 @@
         :rate="rate"
       />
     </div>
-
 </template>
 
 <script>
@@ -31,9 +31,9 @@ export default {
     return {
       isConverterOpened : false,
       rate : {
-        name : '',
+        name    : '',
         nominal : 0,
-        value: 0,
+        value   : 0,
       }
 
     }
@@ -50,7 +50,6 @@ export default {
         top: 0,
       });
     },
-
   },
 
 }

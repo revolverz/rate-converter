@@ -17,7 +17,7 @@
                     class="rate-elem"
                     v-for="rate in filteredRates"
                     :key="rate.ID"
-                    @click="goToConverter(rate)"
+                    @click="openConverter(rate)"
                 >
                     <div class="rate-type">
                         <p class="rate-elem__charcode">{{ rate.CharCode }}</p>
@@ -25,7 +25,6 @@
                             {{ rate.Nominal }} {{ rate.Name }}
                         </div>
                     </div>
-
                     <span class="rate-elem__value">{{ rate.Value }}</span>
                 </li>
             </ul>
@@ -40,7 +39,6 @@
     </section>
 </template>
 
-
 <script>
 import { getRates } from './utils.js';
 import { PAGE_SIZE } from './constants.js';
@@ -51,15 +49,19 @@ export default {
     data() {
         return {
             listRates : [],
-            page: 0,
-            search: '',
+            page      : 0,
+            search    : '',
         };
     },
 
     async mounted() {
-        let firstPartRates = await getRates(1)
+        try {
+            let firstPartRates = await getRates(1)
 
-        this.listRates = [...firstPartRates];
+            this.listRates = [...firstPartRates];
+        } catch ( error ) {
+            console.log(error);
+        }
     },
 
     computed : {
@@ -79,7 +81,7 @@ export default {
     },
 
     methods : {
-        goToConverter( rate ) {
+        openConverter( rate ) {
             this.$emit('open-converter', {
                 rateName: rate.CharCode,
                 rateNominal : rate.Nominal,
@@ -188,10 +190,12 @@ input.search__input::placeholder {
 }
 
 .get-rates-btn {
+    display: block;
     margin-bottom: 6px;
     border: none;
     background: transparent;
     height: 30px;
+    margin: 0 auto;
 }
 
 .get-rates-btn:hover {
