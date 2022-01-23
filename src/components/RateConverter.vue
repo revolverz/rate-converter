@@ -166,7 +166,6 @@ export default {
         &:hover {
             color: #53ad59;
             border: 1px solid #53ad59;
-            box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
         }
     }
 }
