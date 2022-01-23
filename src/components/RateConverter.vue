@@ -159,7 +159,7 @@ export default {
         background-color: #fff;
         color: #25282b;
         border: 1px solid #75bd7a;
-        height: 44px;
+        height: 45px;
         width: 138px;
         margin: 0 auto;
 

@@ -219,7 +219,8 @@ input.search__input::placeholder {
     margin-bottom: 6px;
     border: none;
     background: transparent;
-    height: 30px;
+    width: 100%;
+    height: 45px;
     margin: 0 auto;
 }
 
