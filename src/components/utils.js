@@ -1,7 +1,6 @@
 import { RATES_SCRIPT_SOURCE } from './constants.js';
 import axios from 'axios';
 
-
 /**
  * Отдает следующую порцию элементов
  * @param  {array} rates весь массив с объектами валют
@@ -28,11 +27,10 @@ const convertToArray = (rates) => {
 }
 
 /**
- * Делает запрос на удаленный сервер ЦБ для получения курсов валлют
- * @param  {number} pageNumber номер диапазона
- * @return {array} Возвращает текущий диапазон объектов валют
+ * Делает запрос на удаленный сервер ЦБ для получения курсов валют
+ * @return {array} Возвращает весь массив валют
  */
-export const getRates = async (pageNumber)  => {
+export const getAllRates = async ()  => {
     const result = await axios( {
         method  : 'get',
         url : RATES_SCRIPT_SOURCE,
@@ -43,6 +41,18 @@ export const getRates = async (pageNumber)  => {
     }
 
     const rates = convertToArray(result.data.Valute);
+
+    return rates;
+}
+
+/**
+ * Запрашивает все валюты и отбирает запрашиваемый диапазон
+ * @param  {number} pageNumber номер диапазона
+ * @return {array} Возвращает текущий диапазон объектов валют
+ */
+export const getRatesPortion = async (pageNumber)  => {
+    const rates = await getAllRates();
+
     const currentPartRates = getArrRange(rates, 10, pageNumber )
 
     return currentPartRates;

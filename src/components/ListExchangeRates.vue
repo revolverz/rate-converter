@@ -8,14 +8,15 @@
                     placeholder="Начните набирать символ..."
                     class="search__input"
                     v-model="search"
+                    @input="getAndFilterRates"
                 >
             </label>
         </div>
-        <div v-if="filteredRates.length">
+        <div v-if="listRates.length">
             <ul class="rate-list">
                 <li
                     class="rate-elem"
-                    v-for="rate in filteredRates"
+                    v-for="rate in listRates"
                     :key="rate.ID"
                     @click="openConverter(rate)"
                 >
@@ -29,8 +30,9 @@
                 </li>
             </ul>
             <button
-                class="get-rates-btn"
-                @click="addRates"
+                v-if="isNeedShowMore"
+                class="show-more-btn"
+                @click="getAndAddRatesPortion"
             >
                 Показать еще...
             </button>
@@ -40,7 +42,7 @@
 </template>
 
 <script>
-import { getRates } from './utils.js';
+import { getRatesPortion, getAllRates } from './utils.js';
 import { PAGE_SIZE } from './constants.js';
 
 export default {
@@ -48,15 +50,16 @@ export default {
 
     data() {
         return {
-            listRates : [],
-            page      : 0,
-            search    : '',
+            listRates      : [],
+            page           : 0,
+            search         : '',
+            isNeedShowMore : true,
         };
     },
 
     async mounted() {
         try {
-            let firstPartRates = await getRates(1)
+            let firstPartRates = await getRatesPortion(1)
 
             this.listRates = [...firstPartRates];
         } catch ( error ) {
@@ -68,36 +71,53 @@ export default {
         nextPage() {
             return Math.ceil( this.listRates.length / PAGE_SIZE ) + 1;
         },
+    },
 
-        filteredRates() {
-            const filteredRates = this.listRates.filter(rate => {
+    methods : {
+        filterRates( rates ) {
+            this.isNeedShowMore = false;
+
+            this.listRates = rates.filter( rate => {
                 const regex = new RegExp(this.search, 'i');
 
                 return rate.Name.match(regex) || rate.CharCode.match(regex)
             });
+        },
 
-            return filteredRates;
-        }
-    },
+        async getAndFilterRates() {
+            try {
+                const allRates = await getAllRates();
 
-    methods : {
+                this.filterRates(allRates)
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
+        addRates(rates) {
+            if(!rates.length) {
+                this.isNeedShowMore = false;
+            }
+
+            this.listRates = [...this.listRates, ...rates]
+        },
+
+        async getAndAddRatesPortion() {
+            try {
+                const currentPartRates = await getRatesPortion(this.nextPage);
+
+                this.addRates(currentPartRates);
+            } catch (error) {
+                console.log(error)
+            }
+        },
+
         openConverter( rate ) {
             this.$emit('open-converter', {
                 rateName: rate.CharCode,
                 rateNominal : rate.Nominal,
                 rateValue: rate.Value
             });
-        },
-
-        async addRates() {
-            try {
-                let currentPartRates = await getRates(this.nextPage);
-
-                this.listRates = [...this.listRates, ...currentPartRates]
-            }
-            catch ( error ) {
-               console.log(error)
-            }
         },
     },
 
@@ -114,7 +134,6 @@ export default {
     &__input {
         height: 44px;
         width: 456px;
-        float: left;
         color: #000000;
         padding: 5px;
         background: #FFFFFF;
@@ -122,6 +141,10 @@ export default {
         box-sizing: border-box;
         border-radius: 4px;
         outline: none;
+    }
+
+    &__input:hover {
+        border: 1px solid #52575C;
     }
 
     &__label {
@@ -148,6 +171,7 @@ input.search__input::placeholder {
     justify-content: space-between;
     border-top: 1px solid #E5E5E5;
     height: 62px;
+    cursor: pointer;
 
     &__nominal {
         .text-normal();
@@ -190,7 +214,7 @@ input.search__input::placeholder {
     background: rgba(196, 196, 196, 0.1);
 }
 
-.get-rates-btn {
+.show-more-btn {
     display: block;
     margin-bottom: 6px;
     border: none;
@@ -199,7 +223,7 @@ input.search__input::placeholder {
     margin: 0 auto;
 }
 
-.get-rates-btn:hover {
+.show-more-btn:hover {
     background: rgba(196, 196, 196, 0.1);
 }
 

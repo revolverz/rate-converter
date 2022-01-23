@@ -16,8 +16,9 @@
 
 <script>
 
+const RateConverter = () => import('./RateConverter.vue');
+
 import ListExchangeRates from './ListExchangeRates.vue';
-import RateConverter from './RateConverter.vue';
 
 export default {
   name: 'ExchangeRates',

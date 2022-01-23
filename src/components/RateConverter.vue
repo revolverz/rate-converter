@@ -74,7 +74,6 @@ export default {
 
             return value.toFixed(4);
         }
-
     },
 
     methods : {
@@ -130,6 +129,13 @@ export default {
         text-align: right;
         padding-right: 12px;
         outline: none;
+        border-radius: 4px;
+        box-sizing: border-box;
+        border: 1px solid #919191;
+    }
+
+    &__input:hover {
+        border: 1px solid #52575C;
     }
 
     &__input-hint {
@@ -150,15 +156,16 @@ export default {
     }
 
     &__reset-values-btn {
-        .primary();
-
-        color: #FFFFFF;
+        background-color: #fff;
+        color: #25282b;
+        border: 1px solid #75bd7a;
         height: 44px;
         width: 138px;
         margin: 0 auto;
 
         &:hover {
-            background-color: #75bd7a;
+            color: #53ad59;
+            border: 1px solid #53ad59;
             box-shadow: 0 1px 3px rgb(0 0 0 / 20%);
         }
     }
