@@ -121,6 +121,7 @@ export default {
         border: 1px solid #919191;
         box-sizing: border-box;
         border-radius: 4px;
+        outline: none;
     }
 
     &__label {

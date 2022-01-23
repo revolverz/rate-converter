@@ -129,6 +129,7 @@ export default {
         color:#52575C;
         text-align: right;
         padding-right: 12px;
+        outline: none;
     }
 
     &__input-hint {
