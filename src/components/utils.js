@@ -9,8 +9,8 @@ import axios from 'axios';
  * @return {array} Возвращает порцию объектов валют
  */
 const getArrRange = (rates, range, part) => {
-    let start = range * (part - 1);
-    let end = (range * part);
+    const start = range * (part - 1);
+    const end = (range * part);
 
     return rates.slice(start, end);
 }
@@ -52,7 +52,6 @@ export const getAllRates = async ()  => {
  */
 export const getRatesPortion = async (pageNumber)  => {
     const rates = await getAllRates();
-
     const currentPartRates = getArrRange(rates, 10, pageNumber )
 
     return currentPartRates;

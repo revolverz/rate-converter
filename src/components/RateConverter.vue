@@ -15,7 +15,6 @@
                         1 RUR = {{ currentRubleExchangeRate }}
                     </p>
                 </label>
-
             </div>
 
             <img
@@ -23,6 +22,7 @@
                 src="../assets/arrow.svg"
                 alt="Конвертация"
             >
+
             <div class="rate-converter__input-wrapper rate-converter__input-wrapper_type_foreign">
                 <label>
                     <p class="rate-converter__input-label">{{ rate.name }}</p>
@@ -37,7 +37,6 @@
                         1 {{ rate.name }} = {{ rate.value.toFixed(4) }}
                     </p>
                 </label>
-
             </div>
 
             <button
@@ -53,6 +52,7 @@
 <script>
 
 export default {
+    name: 'RateConverter',
 
     props : {
         rate : {
@@ -63,7 +63,7 @@ export default {
 
     data() {
         return {
-            rubAmount: '',
+            rubAmount     : '',
             foreignAmount : '',
         }
     },
@@ -90,11 +90,10 @@ export default {
             this.foreignAmount = '';
         }
     },
-
 }
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
 @import "../main.less";
 
 .rate-converter {
@@ -162,6 +161,7 @@ export default {
         height: 45px;
         width: 138px;
         margin: 0 auto;
+        margin-bottom: 36px;
 
         &:hover {
             color: #53ad59;
@@ -169,6 +169,4 @@ export default {
         }
     }
 }
-
-
 </style>
