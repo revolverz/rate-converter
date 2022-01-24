@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "axios": "^0.25.0",
+    "big.js": "^6.1.1",
     "core-js": "^3.6.5",
     "dinero.js": "^2.0.0-alpha.8",
     "less-loader": "^5.0.0",

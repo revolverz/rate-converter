@@ -1,5 +1,11 @@
 <template>
     <section class="rate-converter">
+        <img
+            class="rate-converter__close-picture"
+            src="../assets/close.svg"
+            alt="Закрыть"
+            @click="$emit('close-converter')"
+        >
         <div class="rate-converter__wrapper">
             <div class="rate-converter__input-wrapper rate-converter__input-wrapper_type_rubles">
                 <label>
@@ -50,6 +56,8 @@
 </template>
 
 <script>
+// для обработки исключений, вроде деления на 0
+import Big from 'big.js';
 
 export default {
     name: 'RateConverter',
@@ -69,16 +77,14 @@ export default {
 
     data() {
         return {
-            rubAmount     : '',
-            foreignAmount : '',
+            rubAmount     : null,
+            foreignAmount : null,
         }
     },
 
     computed : {
         currentRubleExchangeRate() {
-            const value = 1 / this.rate.value;
-
-            return value.toFixed(4);
+            return Big(1 / this.rate.value).toFixed(4);
         }
     },
 
@@ -88,19 +94,20 @@ export default {
         },
 
         rubToForeign() {
-            this.foreignAmount = this.rubAmount / this.rate.value * this.rate.nominal;
+            this.foreignAmount = Big(this.rubAmount / this.rate.value * this.rate.nominal);
         },
 
         resetValues() {
-            this.rubAmount = '';
-            this.foreignAmount = '';
+            this.rubAmount = null;
+            this.foreignAmount = null;
         }
     },
 }
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import "../main.less";
+@import "../media-queries.less";
 
 .rate-converter {
     border-left: 1px solid #E5E5E5;
@@ -112,24 +119,41 @@ export default {
         margin-bottom: 24px;
     }
 
+    &__close-picture {
+       margin: 12px;
+       cursor: pointer;
+
+        .mobile({
+            width: 48px;
+            height: 48px;
+        })
+    }
+
     &__wrapper {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
-        margin-top: 115px;
+        margin-top: 60px;
+
+        .mobile({
+            order: 2;
+        })
     }
 
     &__input-wrapper {
-        width: 516px;
         margin: 0px 24px;
         margin-bottom: 36px;
+
+        .mobile({
+            margin-bottom: 24px;
+        })
     }
 
     &__input {
         .text-normal-bold();
 
         height: 180px;
-        font-size:48px;
+        font-size: 48px;
         color:#52575C;
         text-align: right;
         padding-right: 12px;
@@ -137,6 +161,10 @@ export default {
         border-radius: 4px;
         box-sizing: border-box;
         border: 1px solid #919191;
+
+        .mobile({
+            height: 100px;
+        })
     }
 
     &__input:hover {

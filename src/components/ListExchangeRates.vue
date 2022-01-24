@@ -124,7 +124,7 @@ export default {
 };
 </script>
 
-<style lang="less" scoped>
+<style lang="less">
 @import "../main.less";
 
 .search {
@@ -206,7 +206,7 @@ input.search__input::placeholder {
 }
 
 .rate-elem:last-of-type {
-    margin-bottom: 36px;
+    margin-bottom: 24px;
     border-bottom: 1px solid #E5E5E5;
 }
 

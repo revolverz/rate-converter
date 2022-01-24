@@ -52,7 +52,7 @@ export const getAllRates = async ()  => {
  */
 export const getRatesPortion = async (pageNumber)  => {
     const rates = await getAllRates();
-    const currentPartRates = getArrRange(rates, 10, pageNumber )
+    const currentPortionRates = getArrRange(rates, 10, pageNumber )
 
-    return currentPartRates;
+    return currentPortionRates;
 }

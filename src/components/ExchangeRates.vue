@@ -8,6 +8,7 @@
       </section>
       <rate-converter
         v-if="isConverterOpened"
+        @close-converter="isConverterOpened = false"
         class="rate-converter"
         :rate="rate"
       />
@@ -55,22 +56,33 @@ export default {
 }
 </script>
 
-<style style lang="less" scoped>
+<style lang="less">
+@import "../media-queries.less";
+
 .rates-wrapper {
     width: max-content;
     display: flex;
+    flex-direction: row;
     background-color: white;
     border: 1px solid #919191;
     margin: 0 auto;
     box-sizing: border-box;
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.06);
     border-radius: 4px 4px 0px 0px;
+
+    .mobile({
+        flex-direction: column;
+    })
 }
 
 .rates-list-content {
     width: 456px;
     margin: 24px 36px;
     height: 100%;
+
+    .mobile({
+        order: 1;
+    })
 }
 
 .title {
