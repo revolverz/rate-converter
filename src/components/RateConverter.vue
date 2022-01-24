@@ -62,7 +62,7 @@ export default {
     },
 
     watch: {
-        currentRubleExchangeRate: function () {
+        currentRubleExchangeRate() {
             this.resetValues()
         },
     },
