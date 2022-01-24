@@ -61,6 +61,12 @@ export default {
         },
     },
 
+    watch: {
+        currentRubleExchangeRate: function () {
+            this.resetValues()
+        },
+    },
+
     data() {
         return {
             rubAmount     : '',
