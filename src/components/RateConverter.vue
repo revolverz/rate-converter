@@ -12,7 +12,7 @@
                     <p class="rate-converter__input-label">В рублях</p>
                     <input
                         class="rate-converter__input rate-converter__input_type_rubles"
-                        type="text"
+                        type="number"
                         placeholder="0"
                         v-model="rubAmount"
                         @keyup="rubToForeign"
@@ -34,7 +34,7 @@
                     <p class="rate-converter__input-label">{{ rate.name }}</p>
                     <input
                         class="rate-converter__input rate-converter__input_type_foreign"
-                        type="text"
+                        type="number"
                         placeholder="0"
                         v-model="foreignAmount"
                         @keyup="foreignToRub"
