@@ -7,16 +7,19 @@
             @click="$emit('close-converter')"
         >
         <div class="rate-converter__wrapper">
-            <div class="rate-converter__input-wrapper rate-converter__input-wrapper_type_rubles">
+            <div
+                class="rate-converter__input-wrapper rate-converter__input-wrapper_type_rubles"
+                :class="positionInputTypeRubles"
+            >
                 <label>
                     <p class="rate-converter__input-label">В рублях</p>
-                    <input
-                        class="rate-converter__input rate-converter__input_type_rubles"
-                        type="number"
-                        placeholder="0"
+                    <cleave
                         v-model="rubAmount"
-                        @keyup="rubToForeign"
-                    >
+                        :options="{ numeral: true }"
+                        placeholder="0"
+                        class="rate-converter__input rate-converter__input_type_rubles"
+                        ref="inputRubAmount"
+                    />
                     <p class="rate-converter__input-hint">
                         1 RUR = {{ currentRubleExchangeRate }}
                     </p>
@@ -26,19 +29,23 @@
             <img
                 class="rate-converter__arrow-picture"
                 src="../assets/arrow.svg"
-                alt="Конвертация"
+                alt="Обратная конвертация"
+                @click="reverseValues"
             >
 
-            <div class="rate-converter__input-wrapper rate-converter__input-wrapper_type_foreign">
+            <div
+                class="rate-converter__input-wrapper rate-converter__input-wrapper_type_foreign"
+                :class="positionInputTypeForeign"
+            >
                 <label>
                     <p class="rate-converter__input-label">{{ rate.name }}</p>
-                    <input
-                        class="rate-converter__input rate-converter__input_type_foreign"
-                        type="number"
-                        placeholder="0"
+                    <cleave
                         v-model="foreignAmount"
-                        @keyup="foreignToRub"
-                    >
+                        :options="{ numeral: true }"
+                        placeholder="0"
+                        class="rate-converter__input rate-converter__input_type_foreign"
+                        ref="inputForeignAmount"
+                    />
                     <p class="rate-converter__input-hint">
                         1 {{ rate.name }} = {{ rate.value.toFixed(4) }}
                     </p>
@@ -56,11 +63,15 @@
 </template>
 
 <script>
-// для обработки исключений, вроде деления на 0
+import Cleave from 'vue-cleave-component';
 import Big from 'big.js';
 
 export default {
     name: 'RateConverter',
+
+    components: {
+        Cleave,
+    },
 
     props : {
         rate : {
@@ -77,30 +88,60 @@ export default {
 
     data() {
         return {
-            rubAmount     : null,
-            foreignAmount : null,
+            rubAmount      : null,
+            foreignAmount  : null,
+            isValuesReverse : false,
         }
     },
 
     computed : {
         currentRubleExchangeRate() {
-            return Big(1 / this.rate.value).toFixed(4);
-        }
+            return new Big(1 / this.rate.value.toFixed(4)).toNumber();
+        },
+
+        positionInputTypeRubles() {
+            return this.isValuesReverse ? 'rate-converter__input-wrapper_type_rubles-position' : '';
+        },
+
+        positionInputTypeForeign() {
+            return this.isValuesReverse ? 'rate-converter__input-wrapper_type_foreign-position' : '';
+        },
+    },
+
+    mounted() {
+        this.$refs.inputForeignAmount?.$el.addEventListener('keyup', () => {
+            this.foreignToRub()
+        });
+        this.$refs.inputRubAmount?.$el.addEventListener('keyup', () => {
+            this.rubToForeign()
+        });
     },
 
     methods : {
         foreignToRub() {
-            this.rubAmount = this.foreignAmount * this.rate.value;
+            this.rubAmount = new Big(this.foreignAmount * this.rate.value).toNumber();
         },
 
         rubToForeign() {
-            this.foreignAmount = Big(this.rubAmount / this.rate.value * this.rate.nominal);
+            this.foreignAmount = new Big(this.rubAmount / this.rate.value * this.rate.nominal).toNumber();
         },
 
         resetValues() {
             this.rubAmount = null;
             this.foreignAmount = null;
-        }
+        },
+
+        reverseValues() {
+            this.isValuesReverse = !this.isValuesReverse;
+
+            if (this.isValuesReverse) {
+                this.foreignAmount = new Big(this.rubAmount).toNumber();
+                this.foreignToRub();
+            } else {
+                this.rubAmount = new Big(this.foreignAmount).toNumber();
+                this.rubToForeign();
+            }
+        },
     },
 }
 </script>
@@ -117,11 +158,22 @@ export default {
         height: 48px;
         align-self: center;
         margin-bottom: 24px;
+        order : 1;
+
+        &:hover {
+            opacity: 0.66;
+        }
     }
 
     &__close-picture {
        margin: 12px;
        cursor: pointer;
+       width: 24px;
+       height: 24px;
+
+        &:hover {
+            opacity: 0.66;
+        }
 
         .mobile({
             width: 48px;
@@ -143,6 +195,22 @@ export default {
     &__input-wrapper {
         margin: 0px 24px;
         margin-bottom: 36px;
+
+        &_type_rubles {
+            order : 0;
+
+            &-position {
+                order : 2;
+            }
+        }
+
+        &_type_foreign {
+            order : 2;
+
+            &-position {
+                order : 0;
+            }
+        }
 
         .mobile({
             margin-bottom: 24px;
@@ -196,6 +264,7 @@ export default {
         width: 138px;
         margin: 0 auto;
         margin-bottom: 36px;
+        order: 4;
 
         &:hover {
             color: #53ad59;
